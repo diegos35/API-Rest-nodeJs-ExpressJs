@@ -1,6 +1,14 @@
 const faker = require('faker');
 
 class ProductsService {
+  static _productsServiceInstance = null;
+
+  static getInstance() {
+    if (ProductsService._productsServiceInstance === null) {
+      ProductsService._productsServiceInstance = new ProductsService();
+    }
+    return ProductsService._productsServiceInstance;
+  }
 
   constructor(){
     this.products = [];
@@ -19,25 +27,46 @@ class ProductsService {
     }
   }
 
-create(){
+  create(){
+    const newProduct = {
+      id: faker.datatype.uuid(),
+      ...data
+    }
+    this.products.push(newProduct)
+    return newProduct;
+  }
 
-}
+  find(){
+    return new Promise((resolve, reject)=>{
+      setTimeout (()=>{
+        resolve(this.products);
+      },5000)
+    })
+  }
 
-find(){
-  return this.products;
-}
+  findOne(id){
+    return this.products.find(item => item.id === id);
+  }
 
-findOne(id){
-  return this.products.find(item => item.id === id);
-}
+  update(id, changes){
+    const index = this.products.findIndex(item => item.id === id);
+    if(index === -1) throw new Error("product not found")
 
-update(){
+    const product = this.products[index]
+    this.products[index] = {
+      ...product,
+      ...changes
+    }
+    return this.products[index];
+  }
 
-}
+  delete(){
+    const index = this.products.findIndex(item => item.id === id);
+    if(index === -1) throw new Error("product not found")
 
-delete(){
-
-}
+    this.products.splice(index, 1);
+    return { id }
+  }
 
 }
 
