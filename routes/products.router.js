@@ -9,8 +9,9 @@ const service = new ProductsService();
 
 
 router.get('/', async (req, res)=>{
-  const products =  await service.find();
-  res.json(products)
+  const productsService = await ProductsService.getInstance();
+  const products = await productsService.find();
+  res.json(products);
 })
 
 router.get('/filter', (req, res)=>{ //endopoint de foma especifica deben ir antes
@@ -18,9 +19,11 @@ router.get('/filter', (req, res)=>{ //endopoint de foma especifica deben ir ante
 })
 
 router.get('/:id', async (req, res)=>{
-  const { id } = req.params; //destructuring
-  const product = await service.findOne(id);
-  res.json(product)
+  const productsService = await ProductsService.getInstance();
+  const { id } = req.params;
+  const product = await productsService.findOne(id);
+
+  res.json(product);
 });
 
 router.post('/', async(req, res)=>{
